@@ -1,7 +1,7 @@
 package block
 
 import (
-	"peak-chain/chanhash"
+	"peak-chain/chainhash"
 	"time"
 )
 
@@ -12,7 +12,7 @@ import (
 //  timestamp  4字节
 //  bits       4字节
 //  nonce      4字节
-const MaxBlockHeaderPayload = 16 + (chanhash.HashSize * 2)
+const MaxBlockHeaderPayload = 16 + (chainhash.HashSize * 2)
 const blockHeaderLen = 80
 
 type BlockHeader struct {
@@ -20,10 +20,10 @@ type BlockHeader struct {
 	Version int32
 
 	//上一区块哈希
-	PreBlock chanhash.Hash
+	PreBlock chainhash.Hash
 
 	//默克尔树节点
-	MerkleRoot chanhash.Hash
+	MerkleRoot chainhash.Hash
 
 	//生成区块时间
 	Timestamp time.Time
@@ -36,7 +36,7 @@ type BlockHeader struct {
 }
 
 // 创建区块
-func NewBlockHeader(version int32, prevHash, merkleHash *chanhash.Hash, bits, nonce uint32) *BlockHeader {
+func NewBlockHeader(version int32, prevHash, merkleHash *chainhash.Hash, bits, nonce uint32) *BlockHeader {
 	return &BlockHeader{
 		Version:    version,
 		PreBlock:   *prevHash,

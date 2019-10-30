@@ -1,4 +1,4 @@
-package chanhash
+package chainhash
 
 import (
 	"bytes"
