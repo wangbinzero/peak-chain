@@ -17,6 +17,21 @@ var ErrHashStrSize = fmt.Errorf("字符哈希值最大长度为: %v", MaxHashStr
 //  自定义哈希类型
 type Hash [HashSize]byte
 
+// 哈希值转换为16进制字符串
+func (hs *Hash) String() string {
+	for i := 0; i < HashSize/2; i++ {
+		hs[i], hs[HashSize-1-i] = hs[HashSize-1-i], hs[i]
+	}
+	return hex.EncodeToString(hs[:])
+}
+
+// 拷贝
+func (hs *Hash) CloneBytes() []byte {
+	nHash := make([]byte, HashSize)
+	copy(nHash, hs[:])
+	return nHash
+}
+
 func (hs *Hash) SetBytes(nHash []byte) error {
 	nHashLen := len(nHash)
 	if nHashLen != HashSize {
@@ -28,6 +43,17 @@ func (hs *Hash) SetBytes(nHash []byte) error {
 	return nil
 }
 
+// 比较哈希内容
+func (hs *Hash) IsEqual(target *Hash) bool {
+	if hs == nil && target == nil {
+		return true
+	}
+	if hs == nil || target == nil {
+		return false
+	}
+	return *hs == *target
+}
+
 // 创建哈希值
 func NewHash(nHash []byte) (*Hash, error) {
 	var hash Hash
@@ -36,6 +62,16 @@ func NewHash(nHash []byte) (*Hash, error) {
 		return nil, err
 	}
 	return &hash, nil
+}
+
+// 根据哈希字符串创建哈希字节码
+func NewHashFromStr(hash string) (*Hash, error) {
+	ret := new(Hash)
+	err := Decode(ret, hash)
+	if err != nil {
+		return nil, err
+	}
+	return ret, nil
 }
 
 // 将哈希值转换为16进制哈希字符串
